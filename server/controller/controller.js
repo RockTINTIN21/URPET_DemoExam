@@ -2,6 +2,7 @@ import express from 'express';
 
 const app = express.Router();
 app.use(express.json());
+let count = 1
 const test = {
     numberOfOrder:0,
     date:'09.09.2024',
@@ -17,47 +18,74 @@ repo.push(test);
 
 app.post('/',(req,res)=>{
     const order = req.body;
-    repo.push(order)
+    const {
+        date = 'Не указана',
+        instruments = 'Не указаны',
+        typeError = 'Не указана',
+        description = 'Нет',
+        client = 'Не указан',
+        master = 'Не указана',
+        comments = 'Нет'
+    } = order;
+    const correctOrder = {
+        numberOfOrder: count++,
+        date:date,
+        instruments:instruments,
+        typeError:typeError,
+        description:description,
+        client:client,
+        status:'В работе',
+        master:master,
+        comments:comments,
+        notification: false,
+    }
+    repo.push(correctOrder)
     if(order){
         res.send(`OK!`)
-    }
-})
-app.put('/changeOrderByParams/:numberOfOrder',(req,res)=>{
-    const order = req.body;
-    const id = (Number(req.params.numberOfOrder));
-    const numberOfRepo = repo.indexOf(repo.find(item => item.numberOfOrder === id));
-    if(numberOfRepo){
-        repo[numberOfRepo].master = order.master || repo[numberOfRepo].master;
-        repo[numberOfRepo].status = order.status || repo[numberOfRepo].status;
-        repo[numberOfRepo].description = order.description || repo[numberOfRepo].description;
-        if(order.status){
-            res.send('<h1>test!</h1>');
-        }else{
-            res.send(`OK! ${numberOfRepo}, обновленный элемент в массиве: ${repo[numberOfRepo]}, \n весь массив: ${repo}`);
-        }
     }
 })
 app.get('/',(req,res)=>{
     res.send(repo)
 })
-app.get('/getOrderByParams/:params',(req,res)=>{
+
+app.put('/changeOrderByParams/:numberOfOrder',(req,res)=>{
+    const order = req.body;
+    const id = (Number(req.params.numberOfOrder));
+    const numberOfRepo = repo.indexOf(repo.find(item => item.numberOfOrder === id));
+    const changeNotification = () => {
+        repo[numberOfRepo].notification = true;
+    }
+    if(numberOfRepo){
+        repo[numberOfRepo].master = order.master || repo[numberOfRepo].master;
+        repo[numberOfRepo].status = order.status.toLowerCase() === 'готов' ? changeNotification() : order.status = 'в работе';
+        repo[numberOfRepo].description = order.description || repo[numberOfRepo].description;
+        repo[numberOfRepo].instruments = order.instruments || repo[numberOfRepo].instruments;
+        repo[numberOfRepo].typeError = order.typeError || repo[numberOfRepo].typeError;
+        repo[numberOfRepo].description = order.description || repo[numberOfRepo].description;
+        repo[numberOfRepo].comments = order.comments || repo[numberOfRepo].comments;
+        if(order.status){
+            res.send('<h1>test!</h1>');
+        }else{
+            res.send(`OK! ${numberOfRepo}`);
+        }
+    }
+})
+app.get('/getOrderByParams/:params', (req, res) => {
     const param = req.params.params;
-    console.log('Запрос пришел, сравниваем с ',param)
+    const paramAsNumber = isNaN(param) ? param : Number(param);
     let orders = repo.filter(item =>
-        item.numberOfOrder === param ||
+        item.numberOfOrder === paramAsNumber ||
         item.date === param ||
         item.instruments === param ||
         item.client === param ||
         item.typeError === param ||
         item.description === param ||
         item.status === param ||
-        item.master === param
+        item.master === param ||
+        item.comments === param
     );
-    console.log('Соответсвующий заказ: ',orders);
-    const numberOfRepo = repo.indexOf(repo.find(item=>item === orders));
-    console.log('Номер в репо:',numberOfRepo);
-    if(numberOfRepo){
-        let response = orders.map(item=>
+    if (orders.length > 0) {
+        let response = orders.map(item =>
             `
             Номер заявки: ${item.numberOfOrder}, <br>
             Дата: ${item.date}, <br>
@@ -66,29 +94,19 @@ app.get('/getOrderByParams/:params',(req,res)=>{
             Описание: ${item.description}, <br>
             Клиент: ${item.client}, <br>
             Статус: ${item.status}, <br>
-            Мастер: ${item.master}
+            Мастер: ${item.master}, <br>
+            Комментарий: ${item.comments}
             `
         ).join('<br>');
-        console.log('response:')
-        res.send(
-            response
-        );
+        res.send(response);
+    } else {
+        res.send('Заказ не найден');
     }
-})
-
-app.put('/changeOrderByParams/:numberOfOrder',(req,res)=>{
-    const order = req.body;
-    const id = (Number(req.params.numberOfOrder));
-    const numberOfRepo = repo.indexOf(repo.find(item => item.numberOfOrder === id));
-    if(numberOfRepo){
-        repo[numberOfRepo].master = order.master || repo[numberOfRepo].master;
-        repo[numberOfRepo].status = order.status || repo[numberOfRepo].status;
-        repo[numberOfRepo].description = order.description || repo[numberOfRepo].description;
-        if(order.status){
-            res.send('<h1>test!</h1>');
-        }else{
-            res.send(`OK! ${numberOfRepo}, обновленный элемент в массиве: ${repo[numberOfRepo]}, \n весь массив: ${repo}`);
-        }
-    }
-})
+});
+app.get('/getStatusOfCount', (req, res) => {
+    let orders = repo.filter(item =>
+        item.status.toLowerCase() === 'в работе'
+    );
+    res.send(`Кол-во выполняемых заявок: ${orders.length}`);
+});
 export default {app}

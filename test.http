@@ -1,31 +1,28 @@
 
 
-POST http://localhost:3000
+POST http://localhost:4000
 Content-Type: application/json
 
 {
-  "numberOfOrder":3,
-  "date":"09.09.2qwe123123024",
-  "instruments":"tqqweweqweeqweqwesqwe11232312123233123qwe334t",
-  "typeError":"test4",
-  "description":"Tesqwet description",
-  "client":"rocktiqwentin21",
-  "status":"готово",
-  "master":"Не назначен"
+  "date":"09.09.2qqwewe123123024",
+  "instruments":"tqqweweqwe123eqweqwesqwe11232312123233123qwe334t",
+  "typeError":"te123st4",
+  "description":"Teqsqwet description",
+  "client":"rocktieqwentin21"
 }
 
 ###
 
-GET http://localhost:3000/getOrderByNumberOfOrder/1
-###
-
-PUT http://localhost:3000/changeOrderByParams/1
+PUT http://localhost:4000/changeOrderByParams/1
 Content-Type: application/json
 
 {
   "master":"123",
-  "status": "ready"
+  "status": "готов"
 }
 ###
 
-GET http://localhost:3000/getOrderByParams/test4
+GET http://localhost:4000/getOrderByParams/1
+###
+
+GET http://localhost:4000/getStatusOfCount
