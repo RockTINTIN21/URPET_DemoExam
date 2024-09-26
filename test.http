@@ -1,0 +1,31 @@
+
+
+POST http://localhost:3000
+Content-Type: application/json
+
+{
+  "numberOfOrder":3,
+  "date":"09.09.2qwe123123024",
+  "instruments":"tqqweweqweeqweqwesqwe11232312123233123qwe334t",
+  "typeError":"test4",
+  "description":"Tesqwet description",
+  "client":"rocktiqwentin21",
+  "status":"готово",
+  "master":"Не назначен"
+}
+
+###
+
+GET http://localhost:3000/getOrderByNumberOfOrder/1
+###
+
+PUT http://localhost:3000/changeOrderByParams/1
+Content-Type: application/json
+
+{
+  "master":"123",
+  "status": "ready"
+}
+###
+
+GET http://localhost:3000/getOrderByParams/test4
