@@ -128,6 +128,6 @@ app.get('/getAverageErrorType', (req, res) => {
     let time = 0
     orders.forEach(order => {time += order.averageTime; console.log(order.averageTime);});
     console.log();
-    res.send(`Среднее время выполнения заявок в секундах: ${time / orders.length}`);
+    res.send(`Среднее время выыполнения заявок в секундах: ${time / orders.length}`);
 });
 export default {app}
