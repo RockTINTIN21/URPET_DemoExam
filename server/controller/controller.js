@@ -3,15 +3,17 @@ import express from 'express';
 const app = express.Router();
 app.use(express.json());
 let count = 1
+
 const test = {
     numberOfOrder:0,
-    date:'09.09.2024',
+    date:new Date(),
     instruments:'test',
     typeError:'test2',
     description:'Test description',
     client:'rocktintin21',
     status:'готово',
-    master:'Не назначен'
+    master:'Не назначен',
+    comments:'Нет'
 }
 const repo = []
 repo.push(test);
@@ -19,7 +21,6 @@ repo.push(test);
 app.post('/',(req,res)=>{
     const order = req.body;
     const {
-        date = 'Не указана',
         instruments = 'Не указаны',
         typeError = 'Не указана',
         description = 'Нет',
@@ -29,7 +30,7 @@ app.post('/',(req,res)=>{
     } = order;
     const correctOrder = {
         numberOfOrder: count++,
-        date:date,
+        date:new Date(),
         instruments:instruments,
         typeError:typeError,
         description:description,
@@ -54,6 +55,8 @@ app.put('/changeOrderByParams/:numberOfOrder',(req,res)=>{
     const numberOfRepo = repo.indexOf(repo.find(item => item.numberOfOrder === id));
     const changeNotification = () => {
         repo[numberOfRepo].notification = true;
+        repo[numberOfRepo].endTimeOfRepair = new Date();
+        repo[numberOfRepo].averageTime = (repo[numberOfRepo].endTimeOfRepair - repo[numberOfRepo].date) / (1000);
     }
     if(numberOfRepo){
         repo[numberOfRepo].master = order.master || repo[numberOfRepo].master;
@@ -108,5 +111,23 @@ app.get('/getStatusOfCount', (req, res) => {
         item.status.toLowerCase() === 'в работе'
     );
     res.send(`Кол-во выполняемых заявок: ${orders.length}`);
+});
+app.get('/getAverageTime', (req, res) => {
+    let orders = repo.filter(item =>
+        item.averageTime
+    );
+    let time = 0
+    orders.forEach(order => {time += order.averageTime; console.log(order.averageTime);});
+    console.log();
+    res.send(`Среднее время выполнения заявок в секундах: ${time / orders.length}`);
+});
+app.get('/getAverageErrorType', (req, res) => {
+    let orders = repo.filter(item =>
+        item.averageTime
+    );
+    let time = 0
+    orders.forEach(order => {time += order.averageTime; console.log(order.averageTime);});
+    console.log();
+    res.send(`Среднее время выполнения заявок в секундах: ${time / orders.length}`);
 });
 export default {app}

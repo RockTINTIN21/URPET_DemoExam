@@ -4,16 +4,15 @@ POST http://localhost:4000
 Content-Type: application/json
 
 {
-  "date":"09.09.2qqwewe123123024",
-  "instruments":"tqqweweqwe123eqweqwesqwe11232312123233123qwe334t",
-  "typeError":"te123st4",
-  "description":"Teqsqwet description",
-  "client":"rocktieqwentin21"
+  "instruments":"tqqwewqqqwewewqweeqweeqwe123eqweqweqwesqwe11232312123233123qwe334t",
+  "typeError":"te12qweqwqweest4",
+  "description":"Teqqwewewqweeqsqwet description",
+  "client":"rocktie123qweqwentin21"
 }
 
 ###
 
-PUT http://localhost:4000/changeOrderByParams/1
+PUT http://localhost:4000/changeOrderByParams/3
 Content-Type: application/json
 
 {
@@ -26,3 +25,7 @@ GET http://localhost:4000/getOrderByParams/1
 ###
 
 GET http://localhost:4000/getStatusOfCount
+
+###
+
+GET http://localhost:4000/getAverageTime
