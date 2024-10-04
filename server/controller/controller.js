@@ -16,6 +16,7 @@ const test = {
     comments:'Нет'
 }
 const repo = []
+const staticTypeErrors = {};
 repo.push(test);
 
 app.post('/',(req,res)=>{
@@ -41,6 +42,7 @@ app.post('/',(req,res)=>{
         notification: false,
     }
     repo.push(correctOrder)
+    staticTypeErrors[correctOrder.typeError] === undefined ? staticTypeErrors[correctOrder.typeError] = 0 : staticTypeErrors[correctOrder.typeError] += 1;
     if(order){
         res.send(`OK!`)
     }
@@ -122,12 +124,6 @@ app.get('/getAverageTime', (req, res) => {
     res.send(`Среднее время выполнения заявок в секундах: ${time / orders.length}`);
 });
 app.get('/getAverageErrorType', (req, res) => {
-    let orders = repo.filter(item =>
-        item.averageTime
-    );
-    let time = 0
-    orders.forEach(order => {time += order.averageTime; console.log(order.averageTime);});
-    console.log();
-    res.send(`Среднее время выыполнения заявок в секундах: ${time / orders.length}`);
+    res.send(`Типы ошибок: ${Object.keys(staticTypeErrors).length ? staticTypeErrors : 'Значений еще нет' }`);
 });
 export default {app}

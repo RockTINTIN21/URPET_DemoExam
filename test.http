@@ -4,8 +4,8 @@ POST http://localhost:4000
 Content-Type: application/json
 
 {
-  "instruments":"tqqwewqqqwewewqweeqweeqwe123eqweqweqwesqwe11232312123233123qwe334t",
-  "typeError":"te12qweqwqweest4",
+  "instruments":"tqqw",
+  "typeError":"tes12t24344",
   "description":"Teqqwewewqweeqsqwet description",
   "client":"rocktie123qweqwentin21"
 }
@@ -29,3 +29,6 @@ GET http://localhost:4000/getStatusOfCount
 ###
 
 GET http://localhost:4000/getAverageTime
+
+###
+GET http://localhost:4000/getAverageErrorType
